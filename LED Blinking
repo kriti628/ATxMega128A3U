@@ -1,0 +1,43 @@
+#include<avr/io.h>
+#include<util/delay.h>
+int main(){
+PORTF_DIRSET = 0xFF;
+while(1){
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x01;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x02;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x04;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x08;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x10;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x20;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x40;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	PORTF_OUTSET = 0x80;
+	_delay_ms(500);
+	PORTF_OUTCLR = 0xFF;
+	_delay_ms(500);
+	}
+return 0;
+}
+	
