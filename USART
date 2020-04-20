@@ -1,0 +1,41 @@
+#include<avr/io.h>
+#include<avr/interrupt.h>
+#include<util/delay.h>
+#include<string.h>
+#include<stdio.h>
+#define F_CPU = 2000000
+
+void USART_initialisation(void){
+	PORTC_DIRSET = PIN3_bm;
+	PORTC_DIRCLR = PIN2_bm;
+	USARTC0_BAUDCTRLA = 0x0C;
+	USARTC0_BAUDCTRLB = 0x00;
+	USARTC0_CTRLC = (USART_CHSIZE_8BIT_gc)|(USART_PMODE_DISABLED_gc);
+	USARTC0_CTRLB = (USART_RXEN_bm)|(USART_TXEN_bm);
+}
+
+void USART_transmit(uint8_t data){
+	while(!(USARTC0_STATUS & USART_DREIF_bm));
+	USARTC0_DATA = data ;
+}
+
+void USART_recieve(){
+	while(!(USARTC0_STATUS & USART_RXCIF_bm));
+	return USARTC0_DATA;
+}
+
+int main(){
+
+	
+	USART_initialisation();
+	USARTC0_CTRLA = 0x3C;
+while(1){
+	USART_transmit(USART_recieve);
+	_delay_ms(100);}
+
+	
+	return 0;
+}
+
+
+
