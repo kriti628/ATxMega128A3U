@@ -1,0 +1,49 @@
+#define F_CPU 2000000
+#include<avr/io.h>
+#include<util/delay.h>
+
+void USART_INIT(void){
+	PORTC.DIRSET = PIN3_bm;
+	PORTC.DIRCLR = PIN2_bm;
+	USARTC0.BAUDCTRLA = 0x0C;
+	USARTC0.BAUDCTRLB = 0x00;
+	USARTC0_CTRLC =( USART_CHSIZE_8BIT_gc|USART_PMODE_DISABLED_gc) ;
+	USARTC0_CTRLB = (USART_RXEN_bm|USART_TXEN_bm);
+}
+void USART_TRANS(uint8_t data){
+	while(!(USARTC0_STATUS & USART_DREIF_bm));
+	USARTC0_DATA = data;
+}
+int main(void){
+	USART_INIT();
+	PORTB.DIRCLR = 0x02;
+	PORTF.DIRSET  = 0xFF;
+	PORTF.OUTCLR = 0xFF;
+	
+	ADCB.CTRLA = 0x05;
+	_delay_us(32);
+	ADCB.CTRLB = 0x14;
+	ADCB.REFCTRL = 0x10;
+	ADCB.PRESCALER = 0x01;
+	
+	
+	ADCB.CH0.CTRL = 0x01;
+		
+	while(1){
+		ADCB.CH0.CTRL = 0x81;
+		ADCB.CH0.MUXCTRL = 0x10;
+		while ( !(ADCB.INTFLAGS & ADC_CH0IF_bm));
+		
+		uint8_t adc_result;
+		adc_result = ADCB.CH0.RES;
+		PORTF.OUTSET = adc_result;
+		USART_TRANS(adc_result);
+		_delay_ms(100);
+		PORTF.OUTCLR = 0xFF;
+		_delay_ms(100);
+		ADCB.INTFLAGS = ADC_CH0IF_bm;
+	}
+	
+	
+}
+
